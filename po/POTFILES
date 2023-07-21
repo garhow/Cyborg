@@ -1,0 +1,4 @@
+data/com.mersh.Cyborg.desktop.in
+data/com.mersh.Cyborg.appdata.xml.in
+data/com.mersh.Cyborg.gschema.xml
+src/window.ui

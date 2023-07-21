@@ -1,0 +1,79 @@
+{
+    "app-id" : "com.mersh.Cyborg",
+    "runtime" : "org.gnome.Platform",
+    "runtime-version" : "44",
+    "sdk" : "org.gnome.Sdk",
+    "sdk-extensions" : [
+        "org.freedesktop.Sdk.Extension.rust-stable"
+    ],
+    "command" : "cyborg",
+    "finish-args" : [
+        "--share=network",
+        "--share=ipc",
+        "--socket=fallback-x11",
+        "--device=dri",
+        "--socket=wayland"
+    ],
+    "build-options" : {
+        "append-path" : "/usr/lib/sdk/rust-stable/bin",
+        "build-args" : [
+            "--share=network"
+        ],
+        "env" : {
+            "RUST_BACKTRACE" : "1",
+            "RUST_LOG" : "cyborg=debug"
+        }
+    },
+    "cleanup" : [
+        "/include",
+        "/lib/pkgconfig",
+        "/man",
+        "/share/doc",
+        "/share/gtk-doc",
+        "/share/man",
+        "/share/pkgconfig",
+        "*.la",
+        "*.a"
+    ],
+    "modules" : [
+    	"shared-modules/libusb/libusb.json",
+    	{
+            "name": "scrcpy",
+            "buildsystem": "meson",
+            "config-opts": [
+                "--buildtype=release",
+                "--strip",
+                "-Db_lto=true",
+                "-Dprebuilt_server=scrcpy-server-v1.24"
+            ],
+            "sources": [
+            	{
+            	    "type": "archive",
+            	    "url": "https://github.com/Genymobile/scrcpy/archive/refs/tags/v1.24.tar.gz",
+            	    "sha256": "e3054ad453ac577b941f8df0eabc94e842affc6e1d10ba8d21cededfa2eacc73"
+            	}, {
+            	    "type": "file",
+            	    "url": "https://github.com/Genymobile/scrcpy/releases/download/v1.24/scrcpy-server-v1.24",
+            	    "sha256": "ae74a81ea79c0dc7250e586627c278c0a9a8c5de46c9fb5c38c167fb1a36f056"
+            	}
+            ]
+        }, {
+            "name": "adb",
+            "buildsystem": "simple",
+            "build-commands": ["install -D adb /app/bin/adb"],
+            "sources": [{
+                "type": "archive",
+                "url": "https://dl.google.com/android/repository/platform-tools_r32.0.0-linux.zip",
+                "sha256": "b10f0e159f11aa08437f2e612c91e52616b8429e9d3b8c2d230456f0edd394e6"
+            }]
+    	}, {
+            "name" : "cyborg",
+            "builddir" : true,
+            "buildsystem" : "meson",
+            "sources" : [{
+                "type" : "git",
+                "url" : "file:///var/home/garrett/Projects"
+            }]
+        }
+    ]
+}
